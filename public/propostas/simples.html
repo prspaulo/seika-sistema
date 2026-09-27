@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gerador de Propostas — Simples Nacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/theme.css">
+<link rel="icon" type="image/jpeg" href="/assets/logo.jpeg">
+<style>
+  body { padding: 0 0 24px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 24px 0; }
+  .wrap > header { margin-bottom: 24px; }
+  .wrap > header h1 { font-size: 22px; margin: 0 0 4px; }
+  .wrap > header p { margin: 0; color: var(--muted); font-size: 14px; }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  fieldset {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px 20px;
+  }
+  legend {
+    font-weight: 600;
+    padding: 0 6px;
+    color: var(--accent-dark);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px 16px;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: var(--muted);
+    gap: 4px;
+  }
+  input, select {
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    background: #fff;
+  }
+  input:focus, select:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding: 12px 0 4px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: var(--accent-dark); }
+  button:disabled { background: #9ca3af; cursor: wait; }
+  #status { font-size: 13px; color: var(--muted); }
+  #status.erro { color: #b91c1c; }
+  nav.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  nav.tabs a {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: var(--muted);
+    background: #fff;
+    border: 1px solid var(--border);
+  }
+  nav.tabs a.ativo { color: #fff; background: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="/index.html" class="brand">
+        <span class="brand-badge"><img src="/assets/logo.jpeg" alt="Logo Seika"></span>
+        <span>Propostas</span>
+      </a>
+      <nav class="topnav">
+        <a href="/index.html" class="topnav-link">Início</a>
+        <a href="/consulta/index.html" class="topnav-link">Consulta de CNPJ</a>
+        <a href="/propostas/index.html" class="topnav-link ativo">Propostas</a>
+      </nav>
+    </div>
+  </header>
+<div class="wrap">
+  <nav class="tabs">
+    <a href="index.html">Regularização Fiscal</a>
+    <a class="ativo" href="simples.html">Pessoa Física / Jurídica (Simples Nacional)</a>
+  </nav>
+  <header>
+    <h1>Gerador de Propostas — Pessoa Física / Jurídica (Simples Nacional)</h1>
+    <p>Proposta simplificada, sem regularização de débitos e sem comparação de regimes.</p>
+  </header>
+
+  <form id="form-proposta">
+
+    <fieldset>
+      <legend>Cliente</legend>
+      <div class="grid">
+        <label>Tipo de cliente
+          <select name="tipo_cliente" required>
+            <option value="Pessoa Física">Pessoa Física</option>
+            <option value="Pessoa Jurídica (Simples Nacional)">Pessoa Jurídica (Simples Nacional)</option>
+          </select>
+        </label>
+        <label>Nome completo
+          <input name="cliente_nome" required placeholder="Maria Souza" />
+        </label>
+        <label>Primeiro nome
+          <input name="cliente_primeiro_nome" required placeholder="Maria" />
+        </label>
+        <label>CPF ou CNPJ
+          <input name="cliente_documento" required placeholder="CPF ou CNPJ" />
+        </label>
+        <label>Ramo de atividade
+          <input name="ramo_atividade" placeholder="comércio varejista" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Honorário e Simples Nacional</legend>
+      <div class="grid">
+        <label>Mensalidade (Simples Nacional)
+          <input name="mensalidade_simples" value="R$ 350,00" />
+        </label>
+        <label>Alíquota nominal
+          <input name="sn_aliquota_nominal" placeholder="6,00%" />
+        </label>
+        <label>Alíquota efetiva
+          <input name="sn_aliquota_efetiva" placeholder="8,54%" />
+        </label>
+        <label>Limite de isenção ECD/ECF
+          <input name="limite_isencao_ecd_ecf" value="R$ 78 mil" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contador / Seika (opcional — já vem preenchido)</legend>
+      <div class="grid">
+        <label>Contador
+          <input name="contador_nome" value="Milton Sacchetto de Araújo" />
+        </label>
+        <label>CRC
+          <input name="contador_crc" value="CRC MG 125636/O" />
+        </label>
+        <label>Telefone Seika
+          <input name="seika_telefone" value="(31) 99065-1514" />
+        </label>
+        <label>E-mail Seika
+          <input name="seika_email" value="seikacontabil@gmail.com" />
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" id="btn-gerar">Gerar PDF</button>
+      <span id="status"></span>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById("form-proposta");
+  const btn = document.getElementById("btn-gerar");
+  const status = document.getElementById("status");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    status.className = "";
+    status.textContent = "Gerando PDF...";
+
+    try {
+      const formData = new FormData(form);
+      const params = new URLSearchParams();
+      for (const [key, value] of formData.entries()) params.append(key, value);
+
+      const resp = await fetch("/gerar-simples", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
+      });
+
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(msg || `Erro ${resp.status}`);
+      }
+
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      status.textContent = "PDF gerado! Abrindo em nova aba.";
+    } catch (err) {
+      status.classList.add("erro");
+      status.textContent = "Erro ao gerar o PDF: " + err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

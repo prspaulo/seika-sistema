@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gerador de Propostas — Seika Contabilidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/theme.css">
+<link rel="icon" type="image/jpeg" href="/assets/logo.jpeg">
+<style>
+  body { padding: 0 0 24px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 24px 0; }
+  .wrap > header { margin-bottom: 24px; }
+  .wrap > header h1 { font-size: 22px; margin: 0 0 4px; }
+  .wrap > header p { margin: 0; color: var(--muted); font-size: 14px; }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  fieldset {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px 20px;
+  }
+  legend {
+    font-weight: 600;
+    padding: 0 6px;
+    color: var(--accent-dark);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px 16px;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: var(--muted);
+    gap: 4px;
+  }
+  input {
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    background: #fff;
+  }
+  input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding: 12px 0 4px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: var(--accent-dark); }
+  button:disabled { background: #9ca3af; cursor: wait; }
+  #status { font-size: 13px; color: var(--muted); }
+  #status.erro { color: #b91c1c; }
+  nav.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  nav.tabs a {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: var(--muted);
+    background: #fff;
+    border: 1px solid var(--border);
+  }
+  nav.tabs a.ativo { color: #fff; background: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="/index.html" class="brand">
+        <span class="brand-badge"><img src="/assets/logo.jpeg" alt="Logo Seika"></span>
+        <span>Propostas</span>
+      </a>
+      <nav class="topnav">
+        <a href="/index.html" class="topnav-link">Início</a>
+        <a href="/consulta/index.html" class="topnav-link">Consulta de CNPJ</a>
+        <a href="/propostas/index.html" class="topnav-link ativo">Propostas</a>
+      </nav>
+    </div>
+  </header>
+<div class="wrap">
+  <nav class="tabs">
+    <a class="ativo" href="index.html">Regularização Fiscal</a>
+    <a href="simples.html">Pessoa Física / Jurídica (Simples Nacional)</a>
+  </nav>
+  <header>
+    <h1>Gerador de Propostas — Seika Contabilidade</h1>
+    <p>Preencha os dados do cliente e gere o PDF da proposta na hora.</p>
+  </header>
+
+  <form id="form-proposta">
+
+    <fieldset>
+      <legend>Cliente</legend>
+      <div class="grid">
+        <label>Nome completo
+          <input name="cliente_nome" required placeholder="Jefferson Ferreira da Silva" />
+        </label>
+        <label>Primeiro nome
+          <input name="cliente_primeiro_nome" required placeholder="Jefferson" />
+        </label>
+        <label>CNPJ
+          <input name="cliente_cnpj" required placeholder="38.351.690/0001-04" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Situação atual (pág. 2)</legend>
+      <div class="grid">
+        <label>Qtd. parcelamentos
+          <input name="qtd_parcelamentos" placeholder="2" />
+        </label>
+        <label>Valor dívida ativa
+          <input name="valor_divida_ativa" placeholder="R$ 4.286,99" />
+        </label>
+        <label>Ano ECD/ECF
+          <input name="ano_ecd_ecf" placeholder="2025" />
+        </label>
+        <label>Multa mínima
+          <input name="multa_minima" value="R$ 500,00" />
+        </label>
+        <label>Regime atual
+          <input name="regime_atual" placeholder="Lucro Presumido" />
+        </label>
+        <label>Anos de apuração pendente
+          <input name="anos_apuracao_pendente" placeholder="2025 e 2026" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Honorários de regularização (pág. 3)</legend>
+      <div class="grid">
+        <label>Parcelamento — de
+          <input name="parcelamento_unit_de" placeholder="R$ 450,00" />
+        </label>
+        <label>Parcelamento — por
+          <input name="parcelamento_unit_por" placeholder="R$ 320,00" />
+        </label>
+        <label>Parcelamento — total
+          <input name="parcelamento_total" placeholder="R$ 640,00" />
+        </label>
+        <label>ECD — de
+          <input name="ecd_de" value="R$ 800,00" />
+        </label>
+        <label>ECD — por
+          <input name="ecd_por" placeholder="R$ 500,00" />
+        </label>
+        <label>ECF — de
+          <input name="ecf_de" value="R$ 1.000,00" />
+        </label>
+        <label>ECF — por
+          <input name="ecf_por" placeholder="R$ 600,00" />
+        </label>
+        <label>ECD + ECF — total
+          <input name="ecd_ecf_total" placeholder="R$ 1.100,00" />
+        </label>
+        <label>Responsável pela legalização
+          <input name="responsavel_legalizacao" value="Paulo" />
+        </label>
+        <label>Baixa — de
+          <input name="baixa_de" value="R$ 1.600,00" />
+        </label>
+        <label>Baixa — por
+          <input name="baixa_por" placeholder="R$ 1.200,00" />
+        </label>
+        <label>Total da regularização
+          <input name="total_regularizacao" placeholder="R$ 1.740,00" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Mensalidades (pág. 4)</legend>
+      <div class="grid">
+        <label>Mensalidade — Lucro Presumido
+          <input name="mensalidade_lucro_presumido" value="R$ 600,00" />
+        </label>
+        <label>Mensalidade — Simples Nacional
+          <input name="mensalidade_simples" value="R$ 350,00" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Comparativo de regimes (pág. 5)</legend>
+      <div class="grid">
+        <label>Simples Nacional — alíquota nominal
+          <input name="sn_aliquota_nominal" value="6,00%" />
+        </label>
+        <label>Simples Nacional — alíquota efetiva
+          <input name="sn_aliquota_efetiva" placeholder="8,54%" />
+        </label>
+        <label>Simples Nacional — valor
+          <input name="sn_valor" placeholder="R$ 9.000,00/anual" />
+        </label>
+        <label>Lucro Presumido — alíquota nominal
+          <input name="lp_aliquota_nominal" placeholder="11,33%" />
+        </label>
+        <label>Lucro Presumido — alíquota efetiva
+          <input name="lp_aliquota_efetiva" placeholder="16,28%" />
+        </label>
+        <label>Lucro Presumido — valor
+          <input name="lp_valor" placeholder="R$ 16.995,00/mês" />
+        </label>
+        <label>Limite de isenção ECD/ECF
+          <input name="limite_isencao_ecd_ecf" value="R$ 78 mil" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contador / Seika (opcional — já vem preenchido)</legend>
+      <div class="grid">
+        <label>Contador
+          <input name="contador_nome" value="Milton Sacchetto de Araújo" />
+        </label>
+        <label>CRC
+          <input name="contador_crc" value="CRC MG 125636/O" />
+        </label>
+        <label>Telefone Seika
+          <input name="seika_telefone" value="(31) 99065-1514" />
+        </label>
+        <label>E-mail Seika
+          <input name="seika_email" value="seikacontabil@gmail.com" />
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" id="btn-gerar">Gerar PDF</button>
+      <span id="status"></span>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById("form-proposta");
+  const btn = document.getElementById("btn-gerar");
+  const status = document.getElementById("status");
+
+  (function preencherDaConsulta() {
+    const raw = sessionStorage.getItem("propostaPrefill");
+    if (!raw) return;
+    sessionStorage.removeItem("propostaPrefill");
+    try {
+      const dados = JSON.parse(raw);
+      for (const [chave, valor] of Object.entries(dados)) {
+        const campo = form.elements[chave];
+        if (campo && valor) campo.value = valor;
+      }
+    } catch (err) {
+      console.warn("Não foi possível preencher os dados vindos da consulta:", err);
+    }
+  })();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    status.className = "";
+    status.textContent = "Gerando PDF...";
+
+    try {
+      const formData = new FormData(form);
+      const params = new URLSearchParams();
+      for (const [key, value] of formData.entries()) params.append(key, value);
+
+      const resp = await fetch("/gerar", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
+      });
+
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(msg || `Erro ${resp.status}`);
+      }
+
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      status.textContent = "PDF gerado! Abrindo em nova aba.";
+    } catch (err) {
+      status.classList.add("erro");
+      status.textContent = "Erro ao gerar o PDF: " + err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

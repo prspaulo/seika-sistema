@@ -1,0 +1,22 @@
+{
+  "name": "seika-sistema",
+  "version": "1.0.0",
+  "description": "Sistema unificado Seika Contabilidade: consulta de CNPJ + gerador de propostas",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "atualizar-base": "node scripts/atualizar-base.js",
+    "gerar-proposta": "node generate.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.22.3",
+    "puppeteer": "^25.12.0",
+    "unzipper": "^0.12.5"
+  }
+}

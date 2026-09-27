@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNPJs cadastrados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-badge"><img src="assets/logo.jpeg" alt="Logo"></span>
+        <span>Consulta</span>
+      </a>
+      <nav class="topnav">
+        <a href="/index.html" class="topnav-link">Início</a>
+        <a href="index.html" class="topnav-link">Consultar</a>
+        <a href="lista.html" class="topnav-link ativo">Base completa</a>
+        <a href="admin.html" class="topnav-link">Admin</a>
+        <a href="/propostas/index.html" class="topnav-link">Propostas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container container-larga">
+    <div class="page-header">
+      <h1>CNPJs cadastrados</h1>
+      <p class="subtitle" id="total-info">Carregando total...</p>
+    </div>
+
+    <form id="form-filtros" class="filtros" autocomplete="off">
+      <input
+        type="text"
+        id="filtro-busca"
+        placeholder="Buscar por razão social ou CNPJ..."
+        class="filtro-busca"
+      >
+      <select id="filtro-uf">
+        <option value="">Todos os estados</option>
+      </select>
+      <input
+        type="text"
+        id="filtro-municipio"
+        placeholder="Município"
+        class="filtro-municipio"
+      >
+      <input
+        type="text"
+        id="filtro-cnae"
+        placeholder="CNAE principal (código ou atividade)"
+        class="filtro-cnae"
+        list="lista-cnaes"
+      >
+      <datalist id="lista-cnaes"></datalist>
+      <button type="submit">Filtrar</button>
+      <button type="button" id="btn-limpar-filtros" class="btn-secundario">Limpar</button>
+    </form>
+
+    <div id="mensagem" class="mensagem" hidden></div>
+    <div id="loading" class="loading" hidden>Carregando...</div>
+
+    <div class="tabela-wrap">
+      <table id="tabela-cnpjs" hidden>
+        <thead>
+          <tr>
+            <th>CNPJ</th>
+            <th>Razão social</th>
+            <th>Situação</th>
+            <th>UF / Município</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-corpo"></tbody>
+      </table>
+    </div>
+
+    <div class="paginacao">
+      <button id="btn-anterior" disabled>← Anterior</button>
+      <span id="pagina-atual">Página 1</span>
+      <button id="btn-proxima" disabled>Próxima →</button>
+    </div>
+  </main>
+
+  <div id="modal-overlay" class="modal-overlay" hidden>
+    <div class="modal">
+      <button id="modal-fechar" class="modal-fechar" aria-label="Fechar" type="button">×</button>
+      <div id="modal-loading" class="loading">Carregando...</div>
+      <div id="modal-mensagem" class="mensagem" hidden></div>
+      <section id="modal-resultado" class="resultado" hidden></section>
+    </div>
+  </div>
+
+  <script src="resultado.js"></script>
+  <script src="lista.js"></script>
+</body>
+</html>

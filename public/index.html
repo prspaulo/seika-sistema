@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seika Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/theme.css">
+<link rel="icon" type="image/jpeg" href="/assets/logo.jpeg">
+<style>
+  .hero {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 72px 20px 24px;
+    text-align: center;
+  }
+  .hero-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    box-shadow: var(--shadow-md);
+  }
+  .hero-badge img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+  }
+  .hero p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 15.5px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .cards {
+    max-width: 1040px;
+    margin: 40px auto 80px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  a.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 30px 26px;
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  a.card:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--primary-light);
+    color: var(--primary-text);
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  a.card h2 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+  a.card p { margin: 0; font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+  a.card .card-cta {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--primary-text);
+  }
+  a.card:hover .card-cta { text-decoration: underline; }
+  footer {
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 12.5px;
+    padding: 0 20px 40px;
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="/index.html" class="brand">
+        <span class="brand-badge"><img src="/assets/logo.jpeg" alt="Logo Seika"></span>
+        <span>Seika Sistema</span>
+      </a>
+      <nav class="topnav">
+        <a href="/index.html" class="topnav-link ativo">Início</a>
+        <a href="/consulta/index.html" class="topnav-link">Consulta de CNPJ</a>
+        <a href="/propostas/index.html" class="topnav-link">Propostas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-badge"><img src="/assets/logo.jpeg" alt="Logo Seika"></div>
+      <h1>Seika Sistema</h1>
+      <p>Consulta de CNPJ e geração de propostas comerciais em um só lugar.</p>
+    </section>
+
+    <section class="cards">
+      <a class="card" href="/consulta/index.html">
+        <span class="card-icon">🔎</span>
+        <h2>Consulta de CNPJ</h2>
+        <p>Buscar empresas na base local de Dados Abertos da Receita Federal (MG).</p>
+        <span class="card-cta">Acessar consulta →</span>
+      </a>
+      <a class="card" href="/propostas/index.html">
+        <span class="card-icon">📄</span>
+        <h2>Gerar Propostas</h2>
+        <p>Preencher os dados do cliente e gerar o PDF da proposta comercial.</p>
+        <span class="card-cta">Acessar propostas →</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>Seika Contabilidade</footer>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Proposta de Serviços Contábeis — Simples Nacional</title>
+<style>
+  :root {
+    --navy: #0b2545;
+    --green: #22e3a0;
+    --teal: #0f8b8d;
+    --teal-dark: #0d7a7c;
+    --mint: #d6f5ec;
+    --gray-border: #d7dee6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+    color: #1c2b3a;
+  }
+  .page {
+    width: 1280px;
+    height: 905px;
+    position: relative;
+    page-break-after: always;
+    overflow: hidden;
+    background: #ffffff;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  /* ---------- Logo ---------- */
+  .logo-swan { width: 90px; height: 90px; display: block; }
+  .brand-word {
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    text-align: center;
+    letter-spacing: 2px;
+    color: var(--navy);
+    font-size: 13px;
+    line-height: 1.4;
+    margin-top: 8px;
+  }
+
+  /* ---------- COVER PAGE ---------- */
+  .cover-left {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 720px;
+    background: var(--navy);
+    padding: 90px 70px 60px 70px;
+    color: #fff;
+  }
+  .cover-left .eyebrow {
+    font-style: italic; color: var(--green); font-size: 30px; font-weight: 400; margin: 0;
+  }
+  .cover-left h1 {
+    font-size: 46px; font-weight: 800; margin: 4px 0 20px 0; line-height: 1.15;
+  }
+  .cover-rule { width: 100%; height: 5px; background: var(--green); margin-bottom: 22px; }
+  .cover-sub { color: var(--green); font-size: 18px; margin-bottom: 30px; }
+  .cover-desc { font-size: 15px; line-height: 1.6; max-width: 560px; }
+  .cover-badge {
+    display: inline-block; background: var(--green); color: var(--navy);
+    font-weight: 700; font-size: 13px; padding: 14px 24px; margin-top: 40px;
+  }
+  .cover-right {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 560px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .cover-right .logo-swan { width: 220px; height: 220px; }
+  .cover-right .brand-word { font-size: 24px; margin-top: 18px; }
+
+  /* ---------- INNER PAGE HEADER ---------- */
+  .inner-header {
+    background: var(--navy); color: #fff;
+    padding: 30px 60px; display: flex; align-items: center; gap: 24px;
+  }
+  .inner-header .logo-box {
+    width: 70px; height: 70px; background: #fff; display: flex; align-items: center; justify-content: center;
+  }
+  .inner-header .logo-box .logo-swan { width: 50px; height: 50px; }
+  .inner-header h2 { font-size: 30px; font-weight: 800; margin: 0; flex: 1; }
+  .inner-header .brand-tag { font-size: 11px; letter-spacing: 1px; text-align: right; line-height: 1.5; }
+  .inner-sub {
+    font-style: italic; color: var(--teal); font-size: 15px; padding: 22px 60px 0 60px;
+  }
+  .inner-body { padding: 26px 60px 40px 60px; }
+
+  /* ---------- Page 2: servicos (cards) ---------- */
+  .cards-row { display: flex; gap: 22px; margin-top: 10px; }
+  .card { flex: 1; border: 1px solid var(--gray-border); padding: 26px; min-height: 300px; }
+  .card .icon {
+    width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 20px; margin-bottom: 16px;
+    background: var(--mint); color: var(--teal);
+  }
+  .card h3 { font-size: 16px; margin: 0 0 12px 0; color: #16324a; }
+  .card p { font-size: 13.5px; line-height: 1.6; color: #33475a; margin: 0; }
+
+  /* ---------- Page 3: documentos + mensalidade ---------- */
+  .doc-row { display: flex; gap: 20px; margin-top: 10px; }
+  .doc-col { flex: 1; padding: 22px 24px; }
+  .doc-col.dark { background: var(--navy); color: #fff; }
+  .doc-col.teal { background: var(--teal); color: #fff; }
+  .doc-col h4 { font-size: 15px; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px; }
+  .doc-col ul { margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 2; }
+  .contador-box {
+    margin-top: 24px; border: 1px solid #e8dfa8; background: #fffef2; padding: 14px 20px;
+    font-style: italic; font-size: 13px; color: #4a4a2f;
+  }
+
+  /* ---------- Page 4: estudo tributario + honorario ---------- */
+  .tax-row { display: flex; gap: 22px; margin-top: 10px; }
+  .tax-card { flex: 1; padding: 26px; border: 1px solid var(--gray-border); position: relative; }
+  .tax-card.best { background: var(--mint); border-color: #9de3cc; }
+  .tax-badge {
+    position: absolute; top: -14px; left: 20px; background: var(--green); color: var(--navy);
+    font-weight: 700; font-size: 11px; padding: 6px 14px; border-radius: 3px;
+  }
+  .tax-card h3 { text-align: center; font-size: 20px; margin: 10px 0 6px 0; color: var(--navy); }
+  .tax-pct { text-align: center; font-size: 44px; font-weight: 800; margin: 6px 0 0 0; color: var(--teal); }
+  .tax-pct-label { text-align: center; font-size: 12px; color: #6b7a89; margin-bottom: 14px; }
+  .tax-value { text-align: center; background: #fff; padding: 10px; font-weight: 700; font-size: 15px; margin-bottom: 16px; }
+  .tax-card ul { font-size: 13px; line-height: 1.9; padding-left: 20px; margin: 0; }
+  .tax-footnote {
+    margin-top: 20px; background: var(--teal-dark); color: #fff; font-size: 12.5px; padding: 14px 20px; font-style: italic;
+  }
+  .fee-total {
+    margin-top: 22px; background: var(--navy); color: #fff; text-align: center;
+    padding: 18px; font-size: 20px;
+  }
+  .fee-total strong { font-size: 24px; margin-left: 10px; color: var(--green); }
+
+  /* ---------- Page 5: contact ---------- */
+  .contact-left {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 720px; background: var(--navy); color: #fff;
+    padding: 90px 70px;
+  }
+  .contact-left h1 { font-size: 42px; font-weight: 800; margin: 0 0 20px 0; line-height: 1.2; }
+  .contact-rule { width: 100%; height: 5px; background: var(--green); margin-bottom: 26px; }
+  .contact-left .desc { font-size: 15px; line-height: 1.6; margin-bottom: 40px; }
+  .contact-phone {
+    background: var(--green); color: var(--navy); font-weight: 800; font-size: 22px;
+    padding: 16px 22px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  }
+  .contact-note { font-style: italic; font-size: 12.5px; color: #a9bdd0; margin-bottom: 20px; }
+  .contact-email { background: #fff; color: var(--navy); padding: 14px 20px; font-size: 14px; }
+  .contact-right {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 560px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .contact-right .logo-swan { width: 220px; height: 220px; }
+  .contact-right .brand-word { font-size: 24px; margin-top: 18px; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<section class="page">
+  <div class="cover-left">
+    <p class="eyebrow">Proposta de</p>
+    <h1>Serviços<br>Contábeis</h1>
+    <div class="cover-rule"></div>
+    <p class="cover-sub">{{tipo_cliente}} — Simples Nacional</p>
+    <p class="cover-desc">
+      Esta proposta apresenta os serviços contábeis oferecidos pela Seika
+      Contabilidade para {{cliente_nome}}, optante pelo regime do Simples
+      Nacional, incluindo escrituração, obrigações fiscais e honorário mensal.
+    </p>
+    <span class="cover-badge">SEIKA CONTABILIDADE</span>
+  </div>
+  <div class="cover-right">
+    <svg class="logo-swan" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="70,20 95,70 55,75" fill="#2be3a5"/>
+      <polygon points="55,75 95,70 90,110 40,95" fill="#22c1a8"/>
+      <polygon points="95,70 160,95 90,110" fill="#1a7d99"/>
+      <polygon points="90,110 160,95 150,130 120,150" fill="#0b2545"/>
+      <polygon points="40,95 90,110 120,150 60,140" fill="#2be3a5"/>
+      <polygon points="120,150 150,130 175,140 140,160" fill="#0b2545"/>
+    </svg>
+    <div class="brand-word">CONTABILIDADE<br>SEIKA</div>
+  </div>
+</section>
+
+<!-- PAGE 2: SERVICOS INCLUSOS -->
+<section class="page">
+  <div class="inner-header">
+    <div class="logo-box">
+      <svg class="logo-swan" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="70,20 95,70 55,75" fill="#2be3a5"/>
+        <polygon points="55,75 95,70 90,110 40,95" fill="#22c1a8"/>
+        <polygon points="95,70 160,95 90,110" fill="#1a7d99"/>
+        <polygon points="90,110 160,95 150,130 120,150" fill="#0b2545"/>
+        <polygon points="40,95 90,110 120,150 60,140" fill="#2be3a5"/>
+        <polygon points="120,150 150,130 175,140 140,160" fill="#0b2545"/>
+      </svg>
+    </div>
+    <h2>Serviços Inclusos</h2>
+    <div class="brand-tag">SEIKA<br>CONTABILIDADE</div>
+  </div>
+  <div class="inner-body">
+    <p class="inner-sub" style="padding:0; margin-top:0;">{{cliente_nome}} — {{cliente_documento}}</p>
+    <div class="cards-row">
+      <div class="card">
+        <div class="icon">✓</div>
+        <h3>Escrituração Contábil e Fiscal</h3>
+        <p>Escrituração mensal das operações, apuração dos
+        impostos do Simples Nacional e organização
+        contábil de {{tipo_cliente}} atuando em
+        {{ramo_atividade}}.</p>
+      </div>
+      <div class="card">
+        <div class="icon">✓</div>
+        <h3>Obrigações Fiscais em Dia</h3>
+        <p>Geração da guia única do DAS, envio das
+        declarações obrigatórias do Simples Nacional e
+        emissão de notas fiscais dentro do prazo, evitando
+        multas e pendências.</p>
+      </div>
+      <div class="card">
+        <div class="icon">✓</div>
+        <h3>Suporte e Orientação Contábil</h3>
+        <p>Atendimento direto com o contador responsável,
+        orientação sobre enquadramento tributário e
+        acompanhamento contínuo da saúde fiscal do
+        negócio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 3: DOCUMENTOS -->
+<section class="page">
+  <div class="inner-header">
+    <div class="logo-box">
+      <svg class="logo-swan" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="70,20 95,70 55,75" fill="#2be3a5"/>
+        <polygon points="55,75 95,70 90,110 40,95" fill="#22c1a8"/>
+        <polygon points="95,70 160,95 90,110" fill="#1a7d99"/>
+        <polygon points="90,110 160,95 150,130 120,150" fill="#0b2545"/>
+        <polygon points="40,95 90,110 120,150 60,140" fill="#2be3a5"/>
+        <polygon points="120,150 150,130 175,140 140,160" fill="#0b2545"/>
+      </svg>
+    </div>
+    <h2>Documentos e Início dos Trabalhos</h2>
+    <div class="brand-tag">SEIKA<br>CONTABILIDADE</div>
+  </div>
+  <div class="inner-body">
+    <div class="doc-row">
+      <div class="doc-col dark">
+        <h4>📄 DOCUMENTOS NECESSÁRIOS</h4>
+        <ul>
+          <li>{{cliente_documento}}</li>
+          <li>RG e comprovante de endereço atualizado</li>
+          <li>Certificado Digital (quando aplicável)</li>
+          <li>Notas fiscais e movimentações do período</li>
+        </ul>
+      </div>
+      <div class="doc-col teal">
+        <h4>📄 HONORÁRIO MENSAL — SIMPLES NACIONAL</h4>
+        <ul>
+          <li>Mensalidade: {{mensalidade_simples}}/mês</li>
+          <li>Apuração e emissão do DAS incluída</li>
+          <li>Declarações obrigatórias do Simples Nacional</li>
+          <li>Emissão de notas fiscais incluída</li>
+        </ul>
+      </div>
+    </div>
+    <div class="contador-box">✎ Contador Responsável: {{contador_nome}} — {{contador_crc}}</div>
+  </div>
+</section>
+
+<!-- PAGE 4: ESTUDO TRIBUTARIO -->
+<section class="page">
+  <div class="inner-header">
+    <div class="logo-box">
+      <svg class="logo-swan" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="70,20 95,70 55,75" fill="#2be3a5"/>
+        <polygon points="55,75 95,70 90,110 40,95" fill="#22c1a8"/>
+        <polygon points="95,70 160,95 90,110" fill="#1a7d99"/>
+        <polygon points="90,110 160,95 150,130 120,150" fill="#0b2545"/>
+        <polygon points="40,95 90,110 120,150 60,140" fill="#2be3a5"/>
+        <polygon points="120,150 150,130 175,140 140,160" fill="#0b2545"/>
+      </svg>
+    </div>
+    <h2>Simples Nacional</h2>
+    <div class="brand-tag">SEIKA<br>CONTABILIDADE</div>
+  </div>
+  <div class="inner-body">
+    <p class="inner-sub" style="padding:0; margin-top:0;">{{cliente_nome}} — {{cliente_documento}}</p>
+    <div class="tax-row">
+      <div class="tax-card best">
+        <div class="tax-badge">✓ REGIME ENQUADRADO</div>
+        <h3>Simples Nacional</h3>
+        <p class="tax-pct">{{sn_aliquota_nominal}}</p>
+        <p class="tax-pct-label">alíquota nominal</p>
+        <div class="tax-value">Alíquota efetiva: {{sn_aliquota_efetiva}}</div>
+        <ul>
+          <li>1 guia unificada de recolhimento (DAS)</li>
+          <li>Menos obrigações acessórias</li>
+          <li>Escrituração simplificada</li>
+          <li>Sem ECD e ECF obrigatórios*</li>
+        </ul>
+      </div>
+    </div>
+    <div class="fee-total">HONORÁRIO MENSAL: <strong>{{mensalidade_simples}}</strong></div>
+    <div class="tax-footnote">* Para receita anual inferior a {{limite_isencao_ecd_ecf}}, ECD e ECF não são exigidos. Verifique elegibilidade com o contador.</div>
+  </div>
+</section>
+
+<!-- PAGE 5: CONTATO -->
+<section class="page">
+  <div class="contact-left">
+    <h1>Agradecemos<br>seu Contato!</h1>
+    <div class="contact-rule"></div>
+    <p class="desc">Estamos prontos para cuidar da contabilidade de {{cliente_primeiro_nome}}
+    com segurança, agilidade e transparência.</p>
+    <div class="contact-phone">📞 {{seika_telefone}}</div>
+    <p class="contact-note">Telefone e WhatsApp para contato</p>
+    <div class="contact-email">{{seika_email}}</div>
+  </div>
+  <div class="contact-right">
+    <svg class="logo-swan" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="70,20 95,70 55,75" fill="#2be3a5"/>
+      <polygon points="55,75 95,70 90,110 40,95" fill="#22c1a8"/>
+      <polygon points="95,70 160,95 90,110" fill="#1a7d99"/>
+      <polygon points="90,110 160,95 150,130 120,150" fill="#0b2545"/>
+      <polygon points="40,95 90,110 120,150 60,140" fill="#2be3a5"/>
+      <polygon points="120,150 150,130 175,140 140,160" fill="#0b2545"/>
+    </svg>
+    <div class="brand-word">CONTABILIDADE<br>SEIKA</div>
+  </div>
+</section>
+
+</body>
+</html>

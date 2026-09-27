@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta de CNPJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-badge"><img src="assets/logo.jpeg" alt="Logo"></span>
+        <span>Consulta</span>
+      </a>
+      <nav class="topnav">
+        <a href="/index.html" class="topnav-link">Início</a>
+        <a href="index.html" class="topnav-link ativo">Consultar</a>
+        <a href="lista.html" class="topnav-link">Base completa</a>
+        <a href="admin.html" class="topnav-link">Admin</a>
+        <a href="/propostas/index.html" class="topnav-link">Propostas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Consulta de CNPJ</h1>
+      <p class="subtitle">Dados obtidos da base local de Dados Abertos do CNPJ (Receita Federal)</p>
+    </div>
+
+    <form id="form-busca" autocomplete="off">
+      <input
+        type="text"
+        id="input-cnpj"
+        placeholder="Digite o CNPJ (ex: 00.000.000/0001-00)"
+        maxlength="18"
+        inputmode="numeric"
+      >
+      <button type="submit" id="btn-buscar">Buscar</button>
+    </form>
+
+    <div id="mensagem" class="mensagem" hidden></div>
+    <div id="loading" class="loading" hidden>Consultando...</div>
+
+    <section id="resultado" class="resultado" hidden></section>
+  </main>
+
+  <script src="resultado.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

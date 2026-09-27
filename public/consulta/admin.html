@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atualizar base CNPJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-badge"><img src="assets/logo.jpeg" alt="Logo"></span>
+        <span>Consulta</span>
+      </a>
+      <nav class="topnav">
+        <a href="/index.html" class="topnav-link">Início</a>
+        <a href="index.html" class="topnav-link">Consultar</a>
+        <a href="lista.html" class="topnav-link">Base completa</a>
+        <a href="admin.html" class="topnav-link ativo">Admin</a>
+        <a href="/propostas/index.html" class="topnav-link">Propostas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container container-larga">
+    <div class="page-header">
+      <h1>Atualizar base de CNPJ</h1>
+      <p class="subtitle">Importa um novo período de dados abertos da Receita Federal, reconstrói os índices de busca e reaplica os filtros de remoção configurados.</p>
+    </div>
+
+    <div id="bloco-token" class="admin-card">
+      <div class="campo">
+        <label for="input-token">Token de administrador</label>
+        <input type="password" id="input-token" placeholder="Token definido em ADMIN_TOKEN no servidor" autocomplete="off">
+      </div>
+      <button id="btn-entrar">Entrar</button>
+      <div id="mensagem-token" class="mensagem" hidden></div>
+    </div>
+
+    <div id="bloco-painel" class="admin-card" hidden>
+      <form id="form-atualizar" autocomplete="off">
+        <div class="campo">
+          <label for="input-dir">Pasta com os arquivos .zip baixados (caminho no servidor)</label>
+          <input type="text" id="input-dir" placeholder="C:\caminho\para\os\zips" required>
+        </div>
+        <div class="campo">
+          <label for="input-periodo">Período (AAAA-MM, opcional)</label>
+          <input type="text" id="input-periodo" placeholder="2026-10" pattern="\d{4}-\d{2}">
+        </div>
+        <button type="submit" id="btn-iniciar">Iniciar atualização</button>
+      </form>
+
+      <div id="mensagem-painel" class="mensagem" hidden></div>
+
+      <div id="status-execucao" class="status-execucao" hidden>
+        <span id="status-badge" class="badge"></span>
+        <span id="status-texto"></span>
+      </div>
+
+      <pre id="log-console" class="log-console" hidden></pre>
+    </div>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

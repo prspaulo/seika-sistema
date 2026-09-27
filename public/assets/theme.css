@@ -1,0 +1,185 @@
+/* ---------------------------------------------------------------
+   Seika Sistema — tema compartilhado
+   Paleta base extraída do módulo de Consulta de CNPJ.
+   Todas as páginas do sistema devem carregar este arquivo para
+   manter cores, topbar e componentes básicos padronizados.
+------------------------------------------------------------------*/
+
+:root {
+  --bg: #f7fafa;
+  --bg-subtle: #eef3f3;
+  --card-bg: #ffffff;
+  --text: #142238;
+  --text-muted: #5a6b84;
+  --text-faint: #8b97ac;
+  --border: #e1e7ea;
+  --border-strong: #c7d1d6;
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --primary-light: #e6fbf8;
+  --primary-text: #0f766e;
+  --navy: #142238;
+  --error-bg: #fef2f2;
+  --error-text: #b91c1c;
+  --error-border: #fecaca;
+  --success-bg: #f0fdf4;
+  --success-text: #15803d;
+  --success-border: #bbf7d0;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow-sm: 0 1px 2px rgba(20, 34, 56, 0.05);
+  --shadow-md: 0 8px 24px rgba(20, 34, 56, 0.07);
+  --shadow-lg: 0 20px 48px rgba(20, 34, 56, 0.14);
+
+  /* Aliases para compatibilidade com telas mais antigas do sistema
+     (Propostas), que usam esses nomes de variável. */
+  --accent: var(--primary);
+  --accent-dark: var(--primary-hover);
+  --muted: var(--text-muted);
+  --card: var(--card-bg);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% 0%, rgba(13, 148, 136, 0.08), transparent 45%),
+    radial-gradient(circle at 88% 12%, rgba(20, 34, 56, 0.05), transparent 40%);
+  background-attachment: fixed;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Top bar (padrão em todas as páginas) ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.brand-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.topnav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.topnav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.topnav-link:hover {
+  background: var(--bg-subtle);
+  color: var(--text);
+}
+
+.topnav-link.ativo {
+  background: var(--primary-light);
+  color: var(--primary-text);
+}
+
+/* ---------- Utilitários de layout ---------- */
+
+.container { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+.container-larga { max-width: 1040px; }
+
+.page-header { margin-bottom: 28px; }
+
+.page-header h1 {
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+/* ---------- Botões padrão ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 22px;
+  font-size: 14.5px;
+  font-weight: 650;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover { background: var(--primary-hover); box-shadow: var(--shadow-md); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; transform: none; }
+
+.btn-secundario {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.btn-secundario:hover { background: var(--bg-subtle); box-shadow: none; }
