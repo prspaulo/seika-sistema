@@ -37,6 +37,36 @@ let currentPage = 1;
 let hasMoreCurrent = false;
 let cursors = { 1: null };
 let filtrosAtivos = { q: '', uf: '', municipio: '', cnae: '' };
+let colunasRestritas = null;
+const COLUNAS_TABELA = ['cnpj', 'razaoSocial', 'situacaoCadastral', 'municipio'];
+
+function aplicarRestricoesUI(restricoes) {
+  if (!restricoes) return;
+
+  // Os filtros de UF, Município e CNAE já são fixados pelo servidor para
+  // este papel de acesso — escondidos para não sugerir que dá para mudá-los.
+  filtroUfEl.style.display = 'none';
+  filtroMunicipioEl.style.display = 'none';
+  filtroCnaeEl.style.display = 'none';
+
+  if (restricoes.colunasLista) {
+    colunasRestritas = restricoes.colunasLista;
+    const thead = document.querySelector('#tabela-cnpjs thead tr');
+    [...thead.children].forEach((th, i) => {
+      if (!colunasRestritas.includes(COLUNAS_TABELA[i])) th.style.display = 'none';
+    });
+  }
+
+  const partes = [];
+  if (restricoes.municipios) partes.push(`empresas de ${restricoes.municipios.join(', ')}`);
+  if (restricoes.situacoes) partes.push(`situação ${restricoes.situacoes.join(', ').toLowerCase()}`);
+  if (restricoes.cnaePrefixos) partes.push('área de saúde');
+  const aviso = document.getElementById('aviso-restricao');
+  if (aviso && partes.length > 0) {
+    aviso.textContent = `Visualização restrita: ${partes.join(' · ')}.`;
+    aviso.hidden = false;
+  }
+}
 
 for (const [sigla, nome] of UFS) {
   const opt = document.createElement('option');
@@ -97,12 +127,15 @@ function renderTabela(items) {
     const situacaoLower = (item.situacaoCadastral || '').toLowerCase();
     const badgeClasse = situacaoLower.includes('ativa') ? 'ativa' : 'inativa';
 
-    tr.innerHTML = `
-      <td><span class="cnpj-link" data-cnpj="${item.cnpj}">${formatarCNPJExibicao(item.cnpj)}</span></td>
-      <td>${item.razaoSocial || '—'}</td>
-      <td><span class="badge ${badgeClasse}">${item.situacaoCadastral || '—'}</span></td>
-      <td>${[item.municipio, item.uf].filter(Boolean).join(' / ') || '—'}</td>
-    `;
+    const celulas = [
+      `<td><span class="cnpj-link" data-cnpj="${item.cnpj}">${formatarCNPJExibicao(item.cnpj)}</span></td>`,
+      `<td>${item.razaoSocial || '—'}</td>`,
+      `<td><span class="badge ${badgeClasse}">${item.situacaoCadastral || '—'}</span></td>`,
+      `<td>${[item.municipio, item.uf].filter(Boolean).join(' / ') || '—'}</td>`
+    ];
+    tr.innerHTML = celulas
+      .filter((_, i) => !colunasRestritas || colunasRestritas.includes(COLUNAS_TABELA[i]))
+      .join('');
     tabelaCorpoEl.appendChild(tr);
   }
 }
@@ -244,4 +277,9 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !modalOverlay.hidden) fecharModal();
 });
 
-loadPage(1);
+(async function iniciar() {
+  const user = await (window.seikaAuthReady || Promise.resolve(null));
+  const restricoes = user?.permissoes?.consulta?.restricoes;
+  aplicarRestricoesUI(restricoes);
+  loadPage(1);
+})();

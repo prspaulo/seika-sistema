@@ -1,3 +1,16 @@
+(async function aplicarAvisoRestricao() {
+  const user = await (window.seikaAuthReady || Promise.resolve(null));
+  const restricoes = user?.permissoes?.consulta?.restricoes;
+  if (!restricoes) return;
+  const subtitle = document.getElementById('subtitle-consulta');
+  if (!subtitle) return;
+  const partes = [];
+  if (restricoes.municipios) partes.push(`empresas de ${restricoes.municipios.join(', ')}`);
+  if (restricoes.situacoes) partes.push(`situação ${restricoes.situacoes.join(', ').toLowerCase()}`);
+  if (restricoes.cnaePrefixos) partes.push('área de saúde');
+  subtitle.textContent = `Visualização restrita: ${partes.join(' · ')}.`;
+})();
+
 const form = document.getElementById('form-busca');
 const input = document.getElementById('input-cnpj');
 const btnBuscar = document.getElementById('btn-buscar');

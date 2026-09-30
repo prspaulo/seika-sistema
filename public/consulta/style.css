@@ -115,6 +115,13 @@ body {
   color: var(--primary-text);
 }
 
+/* Escondido até auth-nav.js confirmar a permissão (evita "flash" de
+   conteúdo restrito antes da checagem assíncrona terminar). */
+.requer-propostas,
+.requer-admin {
+  visibility: hidden;
+}
+
 /* ---------- Layout ---------- */
 
 .container { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }

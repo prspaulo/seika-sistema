@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Acesso restrito — Seika Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/theme.css">
+<link rel="icon" type="image/jpeg" href="/assets/logo.jpeg">
+<style>
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .badge {
+    width: 52px; height: 52px; border-radius: 50%; overflow: hidden;
+    margin: 0 auto 18px; box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--error-bg); font-size: 24px;
+  }
+  h1 { font-size: 19px; margin: 0 0 8px; }
+  p { margin: 0 0 24px; color: var(--text-muted); font-size: 13.5px; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">🔒</div>
+    <h1>Acesso restrito</h1>
+    <p>Seu usuário não tem permissão para acessar esta área do sistema.</p>
+    <a class="btn" href="/index.html">Voltar ao início</a>
+  </div>
+</body>
+</html>

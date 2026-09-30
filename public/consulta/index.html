@@ -21,8 +21,8 @@
         <a href="/index.html" class="topnav-link">Início</a>
         <a href="index.html" class="topnav-link ativo">Consultar</a>
         <a href="lista.html" class="topnav-link">Base completa</a>
-        <a href="admin.html" class="topnav-link">Admin</a>
-        <a href="/propostas/index.html" class="topnav-link">Propostas</a>
+        <a href="admin.html" class="topnav-link requer-admin">Admin</a>
+        <a href="/propostas/index.html" class="topnav-link requer-propostas">Propostas</a>
       </nav>
     </div>
   </header>
@@ -30,7 +30,7 @@
   <main class="container">
     <div class="page-header">
       <h1>Consulta de CNPJ</h1>
-      <p class="subtitle">Dados obtidos da base local de Dados Abertos do CNPJ (Receita Federal)</p>
+      <p class="subtitle" id="subtitle-consulta">Dados obtidos da base local de Dados Abertos do CNPJ (Receita Federal)</p>
     </div>
 
     <form id="form-busca" autocomplete="off">
@@ -50,6 +50,7 @@
     <section id="resultado" class="resultado" hidden></section>
   </main>
 
+  <script src="/assets/auth-nav.js"></script>
   <script src="resultado.js"></script>
   <script src="app.js"></script>
 </body>

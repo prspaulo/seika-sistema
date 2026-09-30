@@ -21,8 +21,8 @@
         <a href="/index.html" class="topnav-link">Início</a>
         <a href="index.html" class="topnav-link">Consultar</a>
         <a href="lista.html" class="topnav-link ativo">Base completa</a>
-        <a href="admin.html" class="topnav-link">Admin</a>
-        <a href="/propostas/index.html" class="topnav-link">Propostas</a>
+        <a href="admin.html" class="topnav-link requer-admin">Admin</a>
+        <a href="/propostas/index.html" class="topnav-link requer-propostas">Propostas</a>
       </nav>
     </div>
   </header>
@@ -31,6 +31,7 @@
     <div class="page-header">
       <h1>CNPJs cadastrados</h1>
       <p class="subtitle" id="total-info">Carregando total...</p>
+      <p class="subtitle" id="aviso-restricao" hidden></p>
     </div>
 
     <form id="form-filtros" class="filtros" autocomplete="off">
@@ -94,6 +95,7 @@
     </div>
   </div>
 
+  <script src="/assets/auth-nav.js"></script>
   <script src="resultado.js"></script>
   <script src="lista.js"></script>
 </body>

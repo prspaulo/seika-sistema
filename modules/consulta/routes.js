@@ -2,6 +2,11 @@ const path = require('path');
 const fs = require('fs');
 const { DatabaseSync } = require('node:sqlite');
 const { spawn } = require('node:child_process');
+const { obterRestricoesConsulta, temPermissao } = require('../auth/rbac');
+
+function obterRestricoes(req) {
+  return obterRestricoesConsulta(req.session && req.session.user);
+}
 
 const ROOT_DIR = path.join(__dirname, '..', '..');
 const DB_PATH = path.join(ROOT_DIR, 'data', 'cnpj.db');
@@ -107,6 +112,7 @@ function fetchFromLocalDatabase(cnpj) {
     porte: PORTE_EMPRESA[row.porte] || row.porte,
     capitalSocial: row.capital_social,
     atividadePrincipal: refCnae.get(row.cnae_fiscal_principal) || null,
+    cnaeFiscalPrincipalCodigo: row.cnae_fiscal_principal,
     atividadesSecundarias,
     endereco: {
       logradouro: [row.tipo_logradouro, row.logradouro].filter(Boolean).join(' '),
@@ -224,6 +230,9 @@ function adicionarLog(linha) {
 }
 
 function requireAdmin(req, res, next) {
+  if (!temPermissao(req.session && req.session.user, 'consulta.admin')) {
+    return res.status(403).json({ erro: 'Seu usuário não tem permissão de administrador.' });
+  }
   if (!ADMIN_TOKEN) {
     return res.status(503).json({ erro: 'Recurso administrativo desabilitado. Defina a variável de ambiente ADMIN_TOKEN no servidor para habilitar.' });
   }
@@ -239,10 +248,16 @@ module.exports = function registerConsultaRoutes(app) {
       return res.status(503).json({ erro: 'Base local de CNPJ não disponível. Rode a importação primeiro.' });
     }
 
+    const restricoes = obterRestricoes(req);
+
     const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 100);
     const after = req.query.after ? onlyDigits(req.query.after) : '';
-    const uf = req.query.uf ? String(req.query.uf).toUpperCase().trim() : null;
-    const municipioTermo = req.query.municipio ? String(req.query.municipio).trim() : null;
+    // Se o papel do usuário tem restrição de município, ela prevalece sobre
+    // o filtro de UF/município digitado (evita que ela consulte outra cidade).
+    const uf = !restricoes && req.query.uf ? String(req.query.uf).toUpperCase().trim() : null;
+    const municipioTermo = restricoes
+      ? restricoes.municipios[0]
+      : (req.query.municipio ? String(req.query.municipio).trim() : null);
     const cnaeTermo = req.query.cnae ? String(req.query.cnae).trim() : null;
     const q = req.query.q ? String(req.query.q).trim() : null;
 
@@ -263,7 +278,32 @@ module.exports = function registerConsultaRoutes(app) {
       baseParams.push(...codigos);
     }
 
-    if (cnaeTermo) {
+    if (restricoes && restricoes.situacoes) {
+      const codigosSituacao = Object.entries(SITUACAO_CADASTRAL)
+        .filter(([, nome]) => restricoes.situacoes.includes(nome))
+        .map(([codigo]) => codigo);
+      if (codigosSituacao.length > 0) {
+        conditions.push(`e.situacao_cadastral IN (${codigosSituacao.map(() => '?').join(',')})`);
+        baseParams.push(...codigosSituacao);
+      }
+    }
+
+    if (restricoes && restricoes.cnaePrefixos) {
+      // Sempre restringe à(s) área(s) liberadas para o papel; se a pessoa
+      // também digitou um termo de CNAE, o resultado é a interseção dos dois.
+      let codigosPermitidos = [...refCnae.keys()].filter(codigo =>
+        restricoes.cnaePrefixos.some(prefixo => codigo.startsWith(prefixo))
+      );
+      if (cnaeTermo) {
+        const codigosBusca = new Set(codigosCnaePorTermo(cnaeTermo));
+        codigosPermitidos = codigosPermitidos.filter(codigo => codigosBusca.has(codigo));
+      }
+      if (codigosPermitidos.length === 0) {
+        return res.json({ items: [], nextCursor: null, hasMore: false, total: totalCnpjs });
+      }
+      conditions.push(`e.cnae_fiscal_principal IN (${codigosPermitidos.map(() => '?').join(',')})`);
+      baseParams.push(...codigosPermitidos);
+    } else if (cnaeTermo) {
       const codigos = codigosCnaePorTermo(cnaeTermo);
       if (codigos.length === 0) {
         return res.json({ items: [], nextCursor: null, hasMore: false, total: totalCnpjs });
@@ -328,14 +368,23 @@ module.exports = function registerConsultaRoutes(app) {
       return res.status(400).json({ erro: 'Busca inválida. Tente outro termo.' });
     }
 
-    const items = rows.map(r => ({
-      cnpj: r.cnpj,
-      razaoSocial: r.razao_social,
-      nomeFantasia: r.nome_fantasia || null,
-      situacaoCadastral: SITUACAO_CADASTRAL[r.situacao_cadastral] || r.situacao_cadastral,
-      uf: r.uf,
-      municipio: refMunicipio.get(r.municipio) || null
-    }));
+    const items = rows.map(r => {
+      const item = {
+        cnpj: r.cnpj,
+        razaoSocial: r.razao_social,
+        nomeFantasia: r.nome_fantasia || null,
+        situacaoCadastral: SITUACAO_CADASTRAL[r.situacao_cadastral] || r.situacao_cadastral,
+        uf: r.uf,
+        municipio: refMunicipio.get(r.municipio) || null
+      };
+      if (restricoes && restricoes.colunasLista) {
+        const permitido = new Set(restricoes.colunasLista);
+        for (const chave of Object.keys(item)) {
+          if (!permitido.has(chave)) delete item[chave];
+        }
+      }
+      return item;
+    });
 
     const nextCursor = items.length === limit ? items[items.length - 1].cnpj : null;
 
@@ -352,9 +401,14 @@ module.exports = function registerConsultaRoutes(app) {
       return res.status(503).json({ erro: 'Base local de CNPJ não disponível. Rode a importação primeiro.' });
     }
 
-    const items = [...refCnae.entries()]
+    const restricoes = obterRestricoes(req);
+    let items = [...refCnae.entries()]
       .map(([codigo, descricao]) => ({ codigo, descricao }))
       .sort((a, b) => a.descricao.localeCompare(b.descricao, 'pt-BR'));
+
+    if (restricoes && restricoes.cnaePrefixos) {
+      items = items.filter(item => restricoes.cnaePrefixos.some(prefixo => item.codigo.startsWith(prefixo)));
+    }
 
     res.json({ items });
   });
@@ -367,11 +421,37 @@ module.exports = function registerConsultaRoutes(app) {
     }
 
     const localData = fetchFromLocalDatabase(cnpj);
-    if (localData) {
-      return res.json(localData);
+    if (!localData) {
+      return res.status(404).json({ erro: 'CNPJ não encontrado na base local.' });
     }
 
-    return res.status(404).json({ erro: 'CNPJ não encontrado na base local.' });
+    const restricoes = obterRestricoes(req);
+    if (restricoes) {
+      const municipioOk = !restricoes.municipios || restricoes.municipios.some(
+        m => (localData.endereco.municipio || '').toUpperCase() === m.toUpperCase()
+      );
+      const situacaoOk = !restricoes.situacoes || restricoes.situacoes.some(
+        s => (localData.situacaoCadastral || '').toUpperCase() === s.toUpperCase()
+      );
+      const cnaeOk = !restricoes.cnaePrefixos || restricoes.cnaePrefixos.some(
+        p => (localData.cnaeFiscalPrincipalCodigo || '').startsWith(p)
+      );
+
+      // Fora do escopo liberado para o papel: trata como se não existisse,
+      // para não revelar dados de empresas que a pessoa não pode ver.
+      if (!municipioOk || !situacaoOk || !cnaeOk) {
+        return res.status(404).json({ erro: 'CNPJ não encontrado na base local.' });
+      }
+
+      if (restricoes.ocultarCapitalSocial) {
+        delete localData.capitalSocial;
+      }
+      if (restricoes.sociosSomenteAdministrador) {
+        localData.socios = (localData.socios || []).filter(s => /admin/i.test(s.qualificacao || ''));
+      }
+    }
+
+    return res.json(localData);
   });
 
   app.get('/api/admin/status', requireAdmin, (req, res) => {
@@ -432,6 +512,9 @@ module.exports = function registerConsultaRoutes(app) {
   });
 
   app.get('/api/admin/atualizar/stream', (req, res) => {
+    if (!temPermissao(req.session && req.session.user, 'consulta.admin')) {
+      return res.status(403).end();
+    }
     if (!ADMIN_TOKEN || req.query.token !== ADMIN_TOKEN) {
       return res.status(401).end();
     }

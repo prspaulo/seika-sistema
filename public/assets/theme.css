@@ -111,6 +111,13 @@ html, body {
   flex-wrap: wrap;
 }
 
+/* Escondido até auth-nav.js confirmar a permissão (evita "flash" de
+   conteúdo restrito antes da checagem assíncrona terminar). */
+.requer-propostas,
+.requer-admin {
+  visibility: hidden;
+}
+
 .topnav-link {
   color: var(--text-muted);
   text-decoration: none;

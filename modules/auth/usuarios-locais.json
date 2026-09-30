@@ -1,0 +1,14 @@
+[
+  {
+    "usuario": "admin",
+    "nome": "Administrador",
+    "role": "admin",
+    "senhaHash": "7dc2e7f1d16137832477f4cda005abdf:01892763284905eb6f94847f11e6085a085ec6375fd540014fc3e4e5147d971ba1edfd729f47bda102649a23ea3d7b6111a0caa4c631cc324f6c4cbfd2a10bed"
+  },
+  {
+    "usuario": "ingrid",
+    "nome": "Ingrid",
+    "role": "consulta_saude_bh",
+    "senhaHash": "498879b17dd0349f36d80d963c95a5f2:c0d1a8d7a6c29e1a42716268419e91d2342ab08af67e2d02d58464bc385ac42b3fc92a1d27a202a8794e0ca2fcb3886b971410a9ddddb2ed80b3a442fade070c"
+  }
+]

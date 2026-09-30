@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Entrar — Seika Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/theme.css">
+<link rel="icon" type="image/jpeg" href="/assets/logo.jpeg">
+<script src="https://accounts.google.com/gsi/client"></script>
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .login-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .login-badge img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .login-card h1 { font-size: 20px; margin: 0 0 6px; }
+  .login-card .subtitle { margin: 0 0 26px; color: var(--text-muted); font-size: 13.5px; }
+  #google-btn { display: flex; justify-content: center; margin-bottom: 6px; min-height: 40px; }
+  #google-indisponivel { display: none; font-size: 12.5px; color: var(--text-faint); margin: 0; }
+  .divisor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-faint);
+    font-size: 11.5px;
+    margin: 24px 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .divisor::before, .divisor::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .local-toggle {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12.5px;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+  #login-local-form {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+    text-align: left;
+  }
+  #login-local-form.aberto { display: flex; }
+  #login-local-form input {
+    padding: 11px 13px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: var(--card-bg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #login-local-form input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+  #login-local-form button { margin-top: 4px; }
+  #erro {
+    display: none;
+    margin-top: 18px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid var(--error-border);
+    font-size: 13px;
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-badge"><img src="/assets/logo.jpeg" alt="Logo Seika"></div>
+    <h1>Seika Sistema</h1>
+    <p class="subtitle">Acesso restrito à equipe Seika Contabilidade</p>
+
+    <div id="google-btn"></div>
+    <p id="google-indisponivel">Login com Google não configurado. Use o login com usuário e senha abaixo.</p>
+
+    <div class="divisor">ou</div>
+    <button type="button" class="local-toggle" id="btn-toggle-local">Entrar com usuário e senha</button>
+
+    <form id="login-local-form" autocomplete="off">
+      <input type="text" id="login-usuario" placeholder="Usuário" autocomplete="username" required>
+      <input type="password" id="login-senha" placeholder="Senha" autocomplete="current-password" required>
+      <button type="submit" class="btn">Entrar</button>
+    </form>
+
+    <div id="erro"></div>
+  </div>
+
+  <script>
+    const destino = new URLSearchParams(location.search).get('next') || '/index.html';
+
+    function mostrarErro(msg) {
+      const el = document.getElementById('erro');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function handleCredentialResponse(response) {
+      fetch('/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: response.credential })
+      })
+        .then(async (r) => {
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.erro || 'Falha no login.');
+          window.location.href = destino;
+        })
+        .catch((err) => mostrarErro(err.message));
+    }
+
+    function abrirLoginLocal() {
+      document.getElementById('login-local-form').classList.add('aberto');
+    }
+
+    (async function init() {
+      try {
+        const r = await fetch('/auth/config');
+        const cfg = await r.json();
+        if (!cfg.googleClientId) {
+          document.getElementById('google-indisponivel').style.display = 'block';
+          abrirLoginLocal();
+          return;
+        }
+        google.accounts.id.initialize({
+          client_id: cfg.googleClientId,
+          callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(document.getElementById('google-btn'), {
+          theme: 'outline', size: 'large', width: 296, text: 'signin_with'
+        });
+      } catch {
+        document.getElementById('google-indisponivel').style.display = 'block';
+        abrirLoginLocal();
+      }
+    })();
+
+    document.getElementById('btn-toggle-local').addEventListener('click', () => {
+      document.getElementById('login-local-form').classList.toggle('aberto');
+    });
+
+    document.getElementById('login-local-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById('login-usuario').value.trim();
+      const senha = document.getElementById('login-senha').value;
+      try {
+        const r = await fetch('/auth/login-local', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario, senha })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.erro || 'Falha no login.');
+        window.location.href = destino;
+      } catch (err) {
+        mostrarErro(err.message);
+      }
+    });
+  </script>
+</body>
+</html>

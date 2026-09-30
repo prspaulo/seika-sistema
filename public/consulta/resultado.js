@@ -50,12 +50,19 @@ function preencherResultado(containerEl, data) {
     ${data.nomeFantasia ? `<div class="fantasia">${data.nomeFantasia}</div>` : ''}
     <span class="badge ${badgeClasse}">${data.situacaoCadastral || 'Situação desconhecida'}</span>
   `;
-  const btnProposta = document.createElement('button');
-  btnProposta.type = 'button';
-  btnProposta.className = 'btn-gerar-proposta';
-  btnProposta.textContent = 'Gerar proposta para este cliente';
-  btnProposta.addEventListener('click', () => irParaGerarProposta(data));
-  header.appendChild(btnProposta);
+  const podeGerarProposta = !window.seikaAuth
+    || !window.seikaAuth.permissoes
+    || !window.seikaAuth.permissoes.propostas
+    || window.seikaAuth.permissoes.propostas.acessar !== false;
+
+  if (podeGerarProposta) {
+    const btnProposta = document.createElement('button');
+    btnProposta.type = 'button';
+    btnProposta.className = 'btn-gerar-proposta';
+    btnProposta.textContent = 'Gerar proposta para este cliente';
+    btnProposta.addEventListener('click', () => irParaGerarProposta(data));
+    header.appendChild(btnProposta);
+  }
   containerEl.appendChild(header);
 
   const grid = document.createElement('div');
@@ -64,8 +71,12 @@ function preencherResultado(containerEl, data) {
     campo('CNPJ', data.cnpj),
     campo('Data de abertura', data.dataAbertura),
     campo('Natureza jurídica', data.naturezaJuridica),
-    campo('Porte', data.porte),
-    campo('Capital social', formatarMoeda(data.capitalSocial)),
+    campo('Porte', data.porte)
+  );
+  if (data.capitalSocial !== undefined) {
+    grid.appendChild(campo('Capital social', formatarMoeda(data.capitalSocial)));
+  }
+  grid.append(
     campo('Atividade principal', data.atividadePrincipal),
     campo('Telefone', data.telefone),
     campo('E-mail', data.email)
